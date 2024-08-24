@@ -46,7 +46,7 @@
             background-color: #45a049;
         }
     </style>
-    <script type="module">
+   <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
         import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
@@ -63,7 +63,8 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        function saveData() {
+        // Definire la funzione saveData e assegnarla a window
+        window.saveData = function() {
             const elements = document.querySelectorAll('input[type=checkbox], input[type=text]');
             elements.forEach((el) => {
                 const id = el.id;
@@ -79,7 +80,7 @@
                         console.error(`Errore durante il salvataggio dei dati per l'elemento ${id}:`, error);
                     });
             });
-        }
+        };
 
         function loadData() {
             const elements = document.querySelectorAll('input[type=checkbox], input[type=text]');
