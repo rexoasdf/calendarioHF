@@ -1,6 +1,8 @@
-
-    <html>
-    <head>
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Calendario Task</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
         body {
@@ -34,11 +36,34 @@
             padding: 5px;
         }
     </style>
-    <script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDK1izm0yfj0IHOuXY0_kZIQFihUXxfjqs",
+            authDomain: "calendario-hf.firebaseapp.com",
+            projectId: "calendario-hf",
+            storageBucket: "calendario-hf.appspot.com",
+            messagingSenderId: "1063334888323",
+            appId: "1:1063334888323:web:2c35100e4165393c9c6cb6",
+            databaseURL: "https://calendario-hf-default-rtdb.firebaseio.com/"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
         function saveData() {
             const elements = document.querySelectorAll('input[type=checkbox], input[type=text]');
             elements.forEach((el) => {
-                localStorage.setItem(el.id, el.type === 'checkbox' ? el.checked : el.value);
+                const id = el.id;
+                const value = el.type === 'checkbox' ? el.checked : el.value;
+                set(ref(db, 'tasks/' + id), {
+                    value: value
+                });
             });
             console.log('Dati salvati automaticamente');
         }
@@ -46,14 +71,18 @@
         function loadData() {
             const elements = document.querySelectorAll('input[type=checkbox], input[type=text]');
             elements.forEach((el) => {
-                const savedValue = localStorage.getItem(el.id);
-                if (savedValue !== null) {
-                    if (el.type === 'checkbox') {
-                        el.checked = savedValue === 'true';
-                    } else {
-                        el.value = savedValue;
+                const id = el.id;
+                const dataRef = ref(db, 'tasks/' + id);
+                onValue(dataRef, (snapshot) => {
+                    const data = snapshot.val();
+                    if (data !== null) {
+                        if (el.type === 'checkbox') {
+                            el.checked = data.value;
+                        } else {
+                            el.value = data.value;
+                        }
                     }
-                }
+                });
             });
         }
 
@@ -62,182 +91,9 @@
             setInterval(saveData, 10000); // Salva automaticamente ogni 10 secondi
         };
     </script>
-    </head>
-    <body>
-    <h2>Selenja Manzi</h2><h3>Lunedì</h3>
-            <table>
-                <tr>
-                    <th>Task</th>
-                    <th>Orario Inizio</th>
-                    <th>Orario Fine</th>
-                    <th>Disponibile</th>
-                    <th>Sotto Task</th>
-                    <th>Done</th>
-                    <th>Note</th>
-                </tr>
-            <tr><td>Riunione Settimanale</td><td>08:30</td><td>09:30</td><td>No</td><td></td><td><input type='checkbox' id='done_1'></td><td><input type='text' id='note_1'></td></tr><tr><td>Colloqui</td><td>09:30</td><td>12:30</td><td>No</td><td></td><td><input type='checkbox' id='done_2'></td><td><input type='text' id='note_2'></td></tr><tr><td>Colloqui</td><td>14:30</td><td>17:30</td><td>No</td><td></td><td><input type='checkbox' id='done_3'></td><td><input type='text' id='note_3'></td></tr></table><h3>Martedì</h3>
-            <table>
-                <tr>
-                    <th>Task</th>
-                    <th>Orario Inizio</th>
-                    <th>Orario Fine</th>
-                    <th>Disponibile</th>
-                    <th>Sotto Task</th>
-                    <th>Done</th>
-                    <th>Note</th>
-                </tr>
-            <tr><td>Colloqui</td><td>09:30</td><td>12:30</td><td>No</td><td></td><td><input type='checkbox' id='done_4'></td><td><input type='text' id='note_4'></td></tr><tr><td>Colloqui</td><td>14:30</td><td>17:30</td><td>No</td><td></td><td><input type='checkbox' id='done_5'></td><td><input type='text' id='note_5'></td></tr></table><h3>Mercoledì</h3>
-            <table>
-                <tr>
-                    <th>Task</th>
-                    <th>Orario Inizio</th>
-                    <th>Orario Fine</th>
-                    <th>Disponibile</th>
-                    <th>Sotto Task</th>
-                    <th>Done</th>
-                    <th>Note</th>
-                </tr>
-            <tr><td>Colloqui</td><td>09:30</td><td>12:30</td><td>No</td><td></td><td><input type='checkbox' id='done_6'></td><td><input type='text' id='note_6'></td></tr><tr><td>Colloqui</td><td>14:30</td><td>17:30</td><td>No</td><td></td><td><input type='checkbox' id='done_7'></td><td><input type='text' id='note_7'></td></tr></table><h3>Giovedì</h3>
-            <table>
-                <tr>
-                    <th>Task</th>
-                    <th>Orario Inizio</th>
-                    <th>Orario Fine</th>
-                    <th>Disponibile</th>
-                    <th>Sotto Task</th>
-                    <th>Done</th>
-                    <th>Note</th>
-                </tr>
-            <tr><td>Colloqui</td><td>09:30</td><td>12:30</td><td>No</td><td></td><td><input type='checkbox' id='done_8'></td><td><input type='text' id='note_8'></td></tr><tr><td>Colloqui</td><td>14:30</td><td>17:30</td><td>No</td><td></td><td><input type='checkbox' id='done_9'></td><td><input type='text' id='note_9'></td></tr></table><h3>Venerdì</h3>
-            <table>
-                <tr>
-                    <th>Task</th>
-                    <th>Orario Inizio</th>
-                    <th>Orario Fine</th>
-                    <th>Disponibile</th>
-                    <th>Sotto Task</th>
-                    <th>Done</th>
-                    <th>Note</th>
-                </tr>
-            <tr><td>Colloqui</td><td>09:30</td><td>12:30</td><td>No</td><td><table style='width:100%; border-collapse:collapse;'><tr><th>Task</th><th>Orario Inizio</th><th>Orario Fine</th><th>Disponibile</th><th>CV da Gestire</th><th>Done</th><th>Note</th></tr><tr><td>Nicola Gennari - Gestione CV</td><td>09:30</td><td>10:00</td><td>No</td><td>4</td><td><input type='checkbox' id='done_10'></td><td><input type='text' id='note_10'></td></tr><tr><td>Nicola Gennari - Gestione CV</td><td>10:00</td><td>10:30</td><td>No</td><td>4</td><td><input type='checkbox' id='done_11'></td><td><input type='text' id='note_11'></td></tr><tr><td>Luca Rosati - Responsabile—>Contabile - Gestione CV</td><td>10:30</td><td>11:00</td><td>No</td><td>2</td><td><input type='checkbox' id='done_12'></td><td><input type='text' id='note_12'></td></tr><tr><td>Francesco Mancani - Gestione CV</td><td>11:00</td><td>11:30</td><td>No</td><td>1</td><td><input type='checkbox' id='done_13'></td><td><input type='text' id='note_13'></td></tr><tr><td>Nicola Marchesan - Gestione CV</td><td>11:30</td><td>12:00</td><td>No</td><td>2</td><td><input type='checkbox' id='done_14'></td><td><input type='text' id='note_14'></td></tr><tr><td>Matis - Stefania Sala - Brescia - Gestione CV</td><td>12:00</td><td>12:30</td><td>No</td><td>4</td><td><input type='checkbox' id='done_15'></td><td><input type='text' id='note_15'></td></tr></table></td><td><input type='checkbox' id='done_16'></td><td><input type='text' id='note_16'></td></tr><tr><td>Colloqui</td><td>14:30</td><td>17:30</td><td>No</td><td><table style='width:100%; border-collapse:collapse;'><tr><th>Task</th><th>Orario Inizio</th><th>Orario Fine</th><th>Disponibile</th><th>CV da Gestire</th><th>Done</th><th>Note</th></tr><tr><td>Caterina Tripodo - Responsabile Tecnico - Gestione CV</td><td>14:30</td><td>15:00</td><td>No</td><td>4</td><td><input type='checkbox' id='done_17'></td><td><input type='text' id='note_17'></td></tr><tr><td>Caterina Tripodo - Responsabile Tecnico - Gestione CV</td><td>15:00</td><td>15:30</td><td>No</td><td>2</td><td><input type='checkbox' id='done_18'></td><td><input type='text' id='note_18'></td></tr><tr><td>Toffanello Edy - Progettista - Gestione CV</td><td>15:30</td><td>16:00</td><td>No</td><td>1</td><td><input type='checkbox' id='done_19'></td><td><input type='text' id='note_19'></td></tr><tr><td>Andrea Michieletto - Gestione CV</td><td>16:00</td><td>16:30</td><td>No</td><td>4</td><td><input type='checkbox' id='done_20'></td><td><input type='text' id='note_20'></td></tr><tr><td>Andrea Michieletto - Gestione CV</td><td>16:30</td><td>17:00</td><td>No</td><td>4</td><td><input type='checkbox' id='done_21'></td><td><input type='text' id='note_21'></td></tr><tr><td>Toffanello Edy - Falegname - Gestione CV</td><td>17:00</td><td>17:30</td><td>No</td><td>2</td><td><input type='checkbox' id='done_22'></td><td><input type='text' id='note_22'></td></tr></table></td><td><input type='checkbox' id='done_23'></td><td><input type='text' id='note_23'></td></tr></table><h3>Sabato</h3>
-            <table>
-                <tr>
-                    <th>Task</th>
-                    <th>Orario Inizio</th>
-                    <th>Orario Fine</th>
-                    <th>Disponibile</th>
-                    <th>Sotto Task</th>
-                    <th>Done</th>
-                    <th>Note</th>
-                </tr>
-            <tr><td>Colloqui</td><td>09:30</td><td>12:30</td><td>No</td><td><table style='width:100%; border-collapse:collapse;'><tr><th>Task</th><th>Orario Inizio</th><th>Orario Fine</th><th>Disponibile</th><th>CV da Gestire</th><th>Done</th><th>Note</th></tr><tr><td>Nicola Piazza - Gestione CV</td><td>09:30</td><td>10:00</td><td>No</td><td>1</td><td><input type='checkbox' id='done_24'></td><td><input type='text' id='note_24'></td></tr><tr><td>Luca Cardola - Ponteggiatore - Gestione CV</td><td>10:00</td><td>10:30</td><td>No</td><td>1</td><td><input type='checkbox' id='done_25'></td><td><input type='text' id='note_25'></td></tr><tr><td>Valerio Astori - Gestione CV</td><td>10:30</td><td>11:00</td><td>No</td><td>4</td><td><input type='checkbox' id='done_26'></td><td><input type='text' id='note_26'></td></tr><tr><td>Valerio Astori - Gestione CV</td><td>11:00</td><td>11:30</td><td>No</td><td>2</td><td><input type='checkbox' id='done_27'></td><td><input type='text' id='note_27'></td></tr><tr><td>Luca Cardola - Meccanico - Gestione CV</td><td>11:30</td><td>12:00</td><td>No</td><td>3</td><td><input type='checkbox' id='done_28'></td><td><input type='text' id='note_28'></td></tr><tr><td>Enzo Osso - Gestione CV</td><td>12:00</td><td>12:30</td><td>No</td><td>4</td><td><input type='checkbox' id='done_29'></td><td><input type='text' id='note_29'></td></tr></table></td><td><input type='checkbox' id='done_30'></td><td><input type='text' id='note_30'></td></tr></table><h2>Elisa Tronchin</h2><h3>Lunedì</h3>
-            <table>
-                <tr>
-                    <th>Task</th>
-                    <th>Orario Inizio</th>
-                    <th>Orario Fine</th>
-                    <th>Disponibile</th>
-                    <th>Sotto Task</th>
-                    <th>Done</th>
-                    <th>Note</th>
-                </tr>
-            <tr><td>Riunione Settimanale</td><td>09:30</td><td>10:30</td><td>No</td><td></td><td><input type='checkbox' id='done_31'></td><td><input type='text' id='note_31'></td></tr><tr><td>task 19</td><td>12:30</td><td>13:30</td><td>No</td><td></td><td><input type='checkbox' id='done_32'></td><td><input type='text' id='note_32'></td></tr><tr><td>Colloqui</td><td>09:30</td><td>12:30</td><td>No</td><td></td><td><input type='checkbox' id='done_33'></td><td><input type='text' id='note_33'></td></tr><tr><td>Colloqui</td><td>14:30</td><td>17:30</td><td>No</td><td></td><td><input type='checkbox' id='done_34'></td><td><input type='text' id='note_34'></td></tr></table><h3>Martedì</h3>
-            <table>
-                <tr>
-                    <th>Task</th>
-                    <th>Orario Inizio</th>
-                    <th>Orario Fine</th>
-                    <th>Disponibile</th>
-                    <th>Sotto Task</th>
-                    <th>Done</th>
-                    <th>Note</th>
-                </tr>
-            <tr><td>Colloqui</td><td>09:30</td><td>12:30</td><td>No</td><td></td><td><input type='checkbox' id='done_35'></td><td><input type='text' id='note_35'></td></tr></table><h3>Mercoledì</h3>
-            <table>
-                <tr>
-                    <th>Task</th>
-                    <th>Orario Inizio</th>
-                    <th>Orario Fine</th>
-                    <th>Disponibile</th>
-                    <th>Sotto Task</th>
-                    <th>Done</th>
-                    <th>Note</th>
-                </tr>
-            <tr><td>Colloqui</td><td>09:30</td><td>12:30</td><td>No</td><td></td><td><input type='checkbox' id='done_36'></td><td><input type='text' id='note_36'></td></tr></table><h3>Giovedì</h3>
-            <table>
-                <tr>
-                    <th>Task</th>
-                    <th>Orario Inizio</th>
-                    <th>Orario Fine</th>
-                    <th>Disponibile</th>
-                    <th>Sotto Task</th>
-                    <th>Done</th>
-                    <th>Note</th>
-                </tr>
-            <tr><td>Colloqui</td><td>09:30</td><td>12:30</td><td>No</td><td></td><td><input type='checkbox' id='done_37'></td><td><input type='text' id='note_37'></td></tr></table><h3>Venerdì</h3>
-            <table>
-                <tr>
-                    <th>Task</th>
-                    <th>Orario Inizio</th>
-                    <th>Orario Fine</th>
-                    <th>Disponibile</th>
-                    <th>Sotto Task</th>
-                    <th>Done</th>
-                    <th>Note</th>
-                </tr>
-            <tr><td>Colloqui</td><td>09:30</td><td>12:30</td><td>No</td><td><table style='width:100%; border-collapse:collapse;'><tr><th>Task</th><th>Orario Inizio</th><th>Orario Fine</th><th>Disponibile</th><th>CV da Gestire</th><th>Done</th><th>Note</th></tr><tr><td>Enzo Osso - Gestione CV</td><td>09:30</td><td>10:00</td><td>No</td><td>2</td><td><input type='checkbox' id='done_38'></td><td><input type='text' id='note_38'></td></tr><tr><td>Giuliano Valloggia - Gestione CV</td><td>10:00</td><td>10:30</td><td>No</td><td>4</td><td><input type='checkbox' id='done_39'></td><td><input type='text' id='note_39'></td></tr><tr><td>Giuliano Valloggia - Gestione CV</td><td>10:30</td><td>11:00</td><td>No</td><td>4</td><td><input type='checkbox' id='done_40'></td><td><input type='text' id='note_40'></td></tr><tr><td>Giuliano Valloggia - Gestione CV</td><td>11:00</td><td>11:30</td><td>No</td><td>4</td><td><input type='checkbox' id='done_41'></td><td><input type='text' id='note_41'></td></tr><tr><td>Giuliano Valloggia - Gestione CV</td><td>11:30</td><td>12:00</td><td>No</td><td>4</td><td><input type='checkbox' id='done_42'></td><td><input type='text' id='note_42'></td></tr><tr><td>Giuliano Valloggia - Gestione CV</td><td>12:00</td><td>12:30</td><td>No</td><td>4</td><td><input type='checkbox' id='done_43'></td><td><input type='text' id='note_43'></td></tr></table></td><td><input type='checkbox' id='done_44'></td><td><input type='text' id='note_44'></td></tr></table><h2>Ilaria Rossetto</h2><h3>Lunedì</h3>
-            <table>
-                <tr>
-                    <th>Task</th>
-                    <th>Orario Inizio</th>
-                    <th>Orario Fine</th>
-                    <th>Disponibile</th>
-                    <th>Sotto Task</th>
-                    <th>Done</th>
-                    <th>Note</th>
-                </tr>
-            <tr><td>Colloqui</td><td>09:30</td><td>12:30</td><td>No</td><td></td><td><input type='checkbox' id='done_45'></td><td><input type='text' id='note_45'></td></tr><tr><td>Colloqui</td><td>14:30</td><td>17:30</td><td>No</td><td></td><td><input type='checkbox' id='done_46'></td><td><input type='text' id='note_46'></td></tr></table><h3>Martedì</h3>
-            <table>
-                <tr>
-                    <th>Task</th>
-                    <th>Orario Inizio</th>
-                    <th>Orario Fine</th>
-                    <th>Disponibile</th>
-                    <th>Sotto Task</th>
-                    <th>Done</th>
-                    <th>Note</th>
-                </tr>
-            <tr><td>Colloqui</td><td>09:30</td><td>12:30</td><td>No</td><td></td><td><input type='checkbox' id='done_47'></td><td><input type='text' id='note_47'></td></tr></table><h3>Mercoledì</h3>
-            <table>
-                <tr>
-                    <th>Task</th>
-                    <th>Orario Inizio</th>
-                    <th>Orario Fine</th>
-                    <th>Disponibile</th>
-                    <th>Sotto Task</th>
-                    <th>Done</th>
-                    <th>Note</th>
-                </tr>
-            <tr><td>Colloqui</td><td>09:30</td><td>12:30</td><td>No</td><td></td><td><input type='checkbox' id='done_48'></td><td><input type='text' id='note_48'></td></tr></table><h3>Giovedì</h3>
-            <table>
-                <tr>
-                    <th>Task</th>
-                    <th>Orario Inizio</th>
-                    <th>Orario Fine</th>
-                    <th>Disponibile</th>
-                    <th>Sotto Task</th>
-                    <th>Done</th>
-                    <th>Note</th>
-                </tr>
-            <tr><td>Colloqui</td><td>09:30</td><td>12:30</td><td>No</td><td></td><td><input type='checkbox' id='done_49'></td><td><input type='text' id='note_49'></td></tr></table><h3>Venerdì</h3>
-            <table>
-                <tr>
-                    <th>Task</th>
-                    <th>Orario Inizio</th>
-                    <th>Orario Fine</th>
-                    <th>Disponibile</th>
-                    <th>Sotto Task</th>
-                    <th>Done</th>
-                    <th>Note</th>
-                </tr>
-            <tr><td>Colloqui</td><td>09:30</td><td>12:30</td><td>No</td><td><table style='width:100%; border-collapse:collapse;'><tr><th>Task</th><th>Orario Inizio</th><th>Orario Fine</th><th>Disponibile</th><th>CV da Gestire</th><th>Done</th><th>Note</th></tr><tr><td>Giuliano Valloggia - Gestione CV</td><td>09:30</td><td>10:00</td><td>No</td><td>3</td><td><input type='checkbox' id='done_50'></td><td><input type='text' id='note_50'></td></tr><tr><td>Renato Bentivoglio - Gestione CV</td><td>10:00</td><td>10:30</td><td>No</td><td>4</td><td><input type='checkbox' id='done_51'></td><td><input type='text' id='note_51'></td></tr><tr><td>Renato Bentivoglio - Gestione CV</td><td>10:30</td><td>11:00</td><td>No</td><td>1</td><td><input type='checkbox' id='done_52'></td><td><input type='text' id='note_52'></td></tr><tr><td>Davide Margiotta - Ref. Diego - Gestione CV</td><td>11:00</td><td>11:30</td><td>No</td><td>4</td><td><input type='checkbox' id='done_53'></td><td><input type='text' id='note_53'></td></tr><tr><td>Davide Margiotta - Ref. Diego - Gestione CV</td><td>11:30</td><td>12:00</td><td>No</td><td>4</td><td><input type='checkbox' id='done_54'></td><td><input type='text' id='note_54'></td></tr><tr><td>Davide Margiotta - Ref. Diego - Gestione CV</td><td>12:00</td><td>12:30</td><td>No</td><td>4</td><td><input type='checkbox' id='done_55'></td><td><input type='text' id='note_55'></td></tr></table></td><td><input type='checkbox' id='done_56'></td><td><input type='text' id='note_56'></td></tr></table></body></html>
+</head>
+<body>
+    <h2>Calendario Task</h2>
+    <!-- Inserisci qui il codice HTML esistente per la tua tabella -->
+</body>
+</html>
