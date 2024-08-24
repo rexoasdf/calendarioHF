@@ -46,9 +46,9 @@
             background-color: #45a049;
         }
     </style>
-   <script type="module">
+  <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+        import { getDatabase, ref, set, onValue, off } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDK1izm0yfj0IHOuXY0_kZIQFihUXxfjqs",
@@ -63,7 +63,9 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // Definire la funzione saveData e assegnarla a window
+        let isUpdatingFromFirebase = false; // Flag per prevenire sovrascrittura dei dati durante l'aggiornamento
+
+        // Funzione per salvare i dati manualmente
         window.saveData = function() {
             const elements = document.querySelectorAll('input[type=checkbox], input[type=text]');
             elements.forEach((el) => {
@@ -82,12 +84,19 @@
             });
         };
 
+        // Funzione per caricare i dati da Firebase e aggiornare la UI
         function loadData() {
             const elements = document.querySelectorAll('input[type=checkbox], input[type=text]');
             elements.forEach((el) => {
                 const id = el.id;
                 const dataRef = ref(db, 'tasks/' + id);
+
+                // Disattivare temporaneamente l'ascoltatore durante il salvataggio per evitare conflitti
+                off(dataRef);
+
                 onValue(dataRef, (snapshot) => {
+                    isUpdatingFromFirebase = true; // Flag per indicare che l'aggiornamento è in corso
+
                     const data = snapshot.val();
                     if (data !== null) {
                         if (el.type === 'checkbox') {
@@ -97,6 +106,8 @@
                         }
                         console.log(`Dati caricati per l'elemento ${id}:`, data.value);
                     }
+
+                    isUpdatingFromFirebase = false; // Aggiornamento completato
                 });
             });
         }
