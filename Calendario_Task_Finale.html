@@ -33,8 +33,20 @@
             background-color: #ddd;
             padding: 5px;
         }
+
+          }
+        button {
+            padding: 20px 35px;
+            background-color: #4CAF50;
+            color: white;
+            border: 2px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
     </style>
-   <script type="module">
+  <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
         import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
@@ -90,7 +102,6 @@
 
         window.onload = function() {
             loadData();
-            setInterval(saveData, 10000); // Salva automaticamente ogni 10 secondi
         };
     </script>
     </head>
@@ -272,4 +283,7 @@
                     <th>Note</th>
                 </tr>
             <tr><td>Colloqui</td><td>09:30</td><td>12:30</td><td>No</td><td><table style='width:100%; border-collapse:collapse;'><tr><th>Task</th><th>Orario Inizio</th><th>Orario Fine</th><th>Disponibile</th><th>CV da Gestire</th><th>Done</th><th>Note</th></tr><tr><td>Giuliano Valloggia - Gestione CV</td><td>09:30</td><td>10:00</td><td>No</td><td>3</td><td><input type='checkbox' id='done_50'></td><td><input type='text' id='note_50'></td></tr><tr><td>Renato Bentivoglio - Gestione CV</td><td>10:00</td><td>10:30</td><td>No</td><td>4</td><td><input type='checkbox' id='done_51'></td><td><input type='text' id='note_51'></td></tr><tr><td>Renato Bentivoglio - Gestione CV</td><td>10:30</td><td>11:00</td><td>No</td><td>1</td><td><input type='checkbox' id='done_52'></td><td><input type='text' id='note_52'></td></tr><tr><td>Davide Margiotta - Ref. Diego - Gestione CV</td><td>11:00</td><td>11:30</td><td>No</td><td>4</td><td><input type='checkbox' id='done_53'></td><td><input type='text' id='note_53'></td></tr><tr><td>Davide Margiotta - Ref. Diego - Gestione CV</td><td>11:30</td><td>12:00</td><td>No</td><td>4</td><td><input type='checkbox' id='done_54'></td><td><input type='text' id='note_54'></td></tr><tr><td>Davide Margiotta - Ref. Diego - Gestione CV</td><td>12:00</td><td>12:30</td><td>No</td><td>4</td><td><input type='checkbox' id='done_55'></td><td><input type='text' id='note_55'></td></tr></table></td><td><input type='checkbox' id='done_56'></td><td><input type='text' id='note_56'>
-            </td></tr></table></body></html>
+            </td></tr></table>
+    <button onclick="saveData()">Salva Dati</button>
+
+</body></html>
