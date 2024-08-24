@@ -56,11 +56,15 @@
             elements.forEach((el) => {
                 const id = el.id;
                 const value = el.type === 'checkbox' ? el.checked : el.value;
-                set(ref(db, 'tasks/' + id), {
-                    value: value
-                });
+
+                set(ref(db, 'tasks/' + id), { value: value })
+                    .then(() => {
+                        console.log(`Dati salvati per l'elemento ${id}:`, value);
+                    })
+                    .catch((error) => {
+                        console.error(`Errore durante il salvataggio dei dati per l'elemento ${id}:`, error);
+                    });
             });
-            console.log('Dati salvati automaticamente');
         }
 
         function loadData() {
@@ -76,6 +80,7 @@
                         } else {
                             el.value = data.value;
                         }
+                        console.log(`Dati caricati per l'elemento ${id}:`, data.value);
                     }
                 });
             });
