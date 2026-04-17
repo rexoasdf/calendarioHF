@@ -278,6 +278,48 @@
         background: var(--line-strong);
         border-radius: 999px;
       }
+
+      /* ===== Mobile responsiveness ===== */
+      .mobile-only { display: none; }
+      .mobile-nav-select {
+        width: 100%;
+        padding: 12px 38px 12px 14px;
+        border-radius: 12px;
+        border: 1px solid var(--line-strong);
+        background: var(--paper);
+        font: 600 0.95rem 'Inter', sans-serif;
+        color: var(--ink);
+        appearance: none;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%230A1B2F' stroke-width='3' stroke-linecap='round'><polyline points='6 9 12 15 18 9'/></svg>");
+        background-repeat: no-repeat;
+        background-position: right 14px center;
+      }
+      .mobile-hint {
+        font-size: 0.7rem;
+        color: var(--muted);
+        margin-top: 6px;
+      }
+      @media (max-width: 900px) {
+        .desktop-only { display: none !important; }
+        .mobile-only { display: flex !important; }
+        .wf-main {
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          padding-left: 12px !important;
+          padding-right: 12px !important;
+        }
+        .wf-main > .wf-section.active {
+          min-width: 1180px;
+          transform: scale(0.96);
+          transform-origin: top left;
+        }
+      }
+      @media (max-width: 600px) {
+        .wf-main > .wf-section.active {
+          min-width: 1100px;
+          transform: scale(0.9);
+        }
+      }
     </style>
   </head>
   <body class="min-h-screen">
@@ -302,6 +344,7 @@
           </div>
         </div>
         <div class="flex-1"></div>
+        <div class="desktop-only">
         <nav class="flex flex-wrap gap-1.5 items-center text-xs">
           <span class="chip chip-muted">App HR</span>
           <button data-wf="wf-login" class="wf-nav btn-ghost">Login</button>
@@ -350,10 +393,37 @@
             POD + Reminder
           </button>
         </nav>
+        </div>
+      </div>
+      <div class="mobile-only flex-col px-4 pb-3 gap-1">
+        <select id="mobileNav" class="mobile-nav-select">
+          <optgroup label="App HR">
+            <option value="wf-login">Login</option>
+            <option value="wf-home-oggi">Home Oggi</option>
+            <option value="wf-dashboard-onboarding">Dashboard Onboarding</option>
+            <option value="wf-scheda-cliente">Scheda Cliente master</option>
+            <option value="wf-scheda-campagna">Scheda Campagna</option>
+            <option value="wf-flow-builder">Flow Builder</option>
+            <option value="wf-creative-gen">Creative Gen</option>
+            <option value="wf-colloqui-scatole">Colloqui (a scatole)</option>
+            <option value="wf-dashboard-cc">Customer Care</option>
+            <option value="wf-vista-l3">Vista L3</option>
+            <option value="wf-dashboard-pod">POD Manager</option>
+          </optgroup>
+          <optgroup label="Portale Cliente">
+            <option value="wf-portale-home">Home Cliente</option>
+            <option value="wf-portale-identikit">Identikit pubblico</option>
+            <option value="wf-portale-valutazione">Valutazione candidato</option>
+          </optgroup>
+          <optgroup label="Admin">
+            <option value="wf-admin-pod">POD + Reminder + Template</option>
+          </optgroup>
+        </select>
+        <div class="mobile-hint">Layout desktop · scorri orizzontalmente per vedere tutto</div>
       </div>
     </header>
 
-    <main class="max-w-[1480px] mx-auto px-5 py-6">
+    <main class="wf-main max-w-[1480px] mx-auto px-5 py-6">
       <!-- ================================================================
      1. LOGIN
 ================================================================ -->
@@ -5015,6 +5085,15 @@
       buttons.forEach((b) =>
         b.addEventListener("click", () => show(b.dataset.wf)),
       );
+      const mobileSelect = document.getElementById('mobileNav');
+      function syncSelect(id) {
+        if (mobileSelect && mobileSelect.value !== id) mobileSelect.value = id;
+      }
+      if (mobileSelect) {
+        mobileSelect.addEventListener('change', e => show(e.target.value));
+      }
+      const _origShow = show;
+      show = function(id) { _origShow(id); syncSelect(id); };
       const initial = location.hash?.slice(1) || "wf-home-oggi";
       show(document.getElementById(initial) ? initial : "wf-home-oggi");
     </script>
