@@ -4767,6 +4767,7 @@
 
       const initial = location.hash?.slice(1) || "wf-home-oggi";
       show(document.getElementById(initial) ? initial : "wf-home-oggi");
+      window.addEventListener('hashchange', () => { const id = location.hash?.slice(1); if (id && document.getElementById(id)) show(id); });
     </script>
   </body>
 </html>
